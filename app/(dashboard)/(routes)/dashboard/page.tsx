@@ -1,5 +1,5 @@
 const DashboardLayout = () => {
-    return ( <></> );
+    return ( <>hello from dashboard</> );
 }
  
 export default DashboardLayout;
