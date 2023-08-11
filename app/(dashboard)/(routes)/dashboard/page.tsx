@@ -1,5 +1,5 @@
-const DashboardLayout = () => {
-    return ( <>hello from dashboard</> );
+const HomePage = () => {
+    return ( <>hello from homepage</> );
 }
  
-export default DashboardLayout;
+export default HomePage;
