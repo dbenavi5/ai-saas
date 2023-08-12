@@ -24,8 +24,8 @@ const MobileSidebar = ({
   return (
     <Sheet>
       <SheetTrigger>
-        <div className="md:hidden border p-[5px] rounded">
-          <Menu />
+        <div className="md:hidden border p-[5px] rounded-full">
+          <Menu className="h-5 w-5"/>
         </div>
       </SheetTrigger>
       <SheetContent side="left" className="p-0">

@@ -22,7 +22,7 @@ const links = [
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/dashboard",
-    color: "text-[#65AFFF]",
+    color: "text-[#FFF94F]",
   },
   {
     label: "Conversation",
@@ -34,7 +34,7 @@ const links = [
     label: "Image Generator",
     icon: ImageIcon,
     href: "/image",
-    color: "text-[#FFF94F]",
+    color: "text-[#65AFFF]",
   },
   {
     label: "Video Generator",
