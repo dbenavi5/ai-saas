@@ -6,7 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dynamo AI",
+  title: "Wiz AI",
   description:
     "AI platform that generates code, images, videos, music and conversions.",
 };
