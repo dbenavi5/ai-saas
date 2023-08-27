@@ -1,19 +1,31 @@
 "use client";
 
 import * as z from "zod";
-
+import axios from "axios";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { ChatCompletionRequestMessage } from "openai";
 
 import Heading from "@/components/heading";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 
 import { formSchema } from "./constants";
+import { Empty } from "@/components/empty";
+import { Loader } from "@/components/loader";
+import { UserAvatar } from "@/components/user-avatar";
+import { BotAvatar } from "@/components/bot-avatar";
 
 const ConversationPage = () => {
+  const router = useRouter();
+  const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -24,7 +36,32 @@ const ConversationPage = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      const userMessage: ChatCompletionRequestMessage = {
+        role: "user",
+        content: values.prompt,
+      };
+
+      const newMessages = [...messages, userMessage];
+
+      // api call
+      const response = await axios.post("/api/conversation", {
+        messages: newMessages,
+      });
+
+      setMessages((current) => [...current, userMessage, response.data]);
+
+      form.reset();
+    } catch (error: any) {
+      // Todo: Open Pro modal
+      // if (error?.response?.status === 403) {
+      //   // proModal.onOpen()
+      // } else {
+      //   toast.error("Something went wrong.");
+      // }
+    } finally {
+      router.refresh();
+    }
   };
   return (
     <div>
@@ -33,7 +70,7 @@ const ConversationPage = () => {
         description="Our most advanced conversation model."
         icon={MessageSquare}
         iconColor="text-[#FB3640]"
-        bgColor="text-[#FB3640]/10"
+        bgColor="bg-[#FB3640]/10"
       />
       <div className="px-4 lg:px-8">
         <div>
@@ -69,12 +106,30 @@ const ConversationPage = () => {
           </Form>
         </div>
         <div className="space-y-4 mt-4">
-          Messages Content
           {isLoading && (
             <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
-              {/* <Loader/> */}
+              <Loader />
             </div>
           )}
+          {messages.length === 0 && !isLoading && (
+            <Empty label="No conversation started" />
+          )}
+          <div className="flex flex-col-reverse gap-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.content}
+                className={cn(
+                  "p-8 w-full flex items-start gap-x-8 rounded-lg",
+                  message.role === "user"
+                    ? "bg-white border border-black/10"
+                    : "bg-muted"
+                )}
+              >
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                <p className="text-sm">{message.content}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
