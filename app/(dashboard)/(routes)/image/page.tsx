@@ -13,7 +13,6 @@ import Heading from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
 
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
 import { Empty } from "@/components/empty";
@@ -27,9 +26,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardFooter } from "@/components/ui/card";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const ImagePage = () => {
   const router = useRouter();
+  const proModal = useProModal();
   const [images, setImages] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,11 +57,11 @@ const ImagePage = () => {
       form.reset();
     } catch (error: any) {
       // Todo: Open Pro modal
-      // if (error?.response?.status === 403) {
-      //   // proModal.onOpen()
-      // } else {
-      //   toast.error("Something went wrong.");
-      // }
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      } else {
+        toast.error("Something went wrong.");
+      }
     } finally {
       router.refresh();
     }
