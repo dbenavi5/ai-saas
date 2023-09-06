@@ -9,7 +9,6 @@ import { Check, Zap } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -17,12 +16,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 export const ProModal = () => {
   const proModal = useProModal();
   const [loading, setLoading] = useState(false);
 
-  const onSubcribe = () => {};
+  const onSubcribe = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/stripe');
+
+      window.location.href = response.data.url;
+    } catch (error: any) {
+      toast.error('Stripe client error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Dialog open={proModal.isOpen} onOpenChange={proModal.onClose}>
       <DialogContent>

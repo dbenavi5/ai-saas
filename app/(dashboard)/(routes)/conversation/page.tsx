@@ -49,6 +49,7 @@ const ConversationPage = () => {
       // api call
       const response = await axios.post("/api/conversation", {
         messages: newMessages,
+        temperature: 0.9,
       });
 
       setMessages((current) => [...current, userMessage, response.data]);

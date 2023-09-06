@@ -24,6 +24,10 @@ const FreeCounter = ({ isPro = false, apiLimitCount = 0 }: FreeCountProps) => {
   if (!mounted) {
     return null;
   }
+
+  if (isPro) {
+    return null;
+  }
   return (
     <div className="px-3">
       <Card className="bg-white/10 border-0">
